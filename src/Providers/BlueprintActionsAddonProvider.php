@@ -9,13 +9,17 @@ use Markkimsal\BlueprintActionsAddon\LaravelActionsGenerator;
 
 class BlueprintActionsAddonProvider
 extends ServiceProvider
-// implements DeferrableProvider
+implements DeferrableProvider
 {
-    public function register()
+    public function boot()
     {
         if (!defined('CUSTOM_STUBS_PATH')) {
             define('CUSTOM_STUBS_PATH', './stubs/blueprint');
         }
+    }
+
+    public function register()
+    {
         if (!$this->app->runningInConsole()) {
             return;
         }
