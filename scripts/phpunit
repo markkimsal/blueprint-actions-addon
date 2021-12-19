@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ -f ./.env ]; then
+    source ./.env
+fi
+
+APP_IMAGE=${APP_IMAGE:-"markkimsal/phusion-php:8.0-builder"}
+
+docker run --rm -ti \
+	-v $(pwd):/app \
+	-w /app \
+	-u 1000 \
+    "$APP_IMAGE" \
+    php \
+    -d 'zend_extension=xdebug.so' \
+    -d 'xdebug.mode=debug,coverage' \
+    -d 'xdebug.client_host=172.17.0.1' \
+    -d 'xdebug.client_port=9003' \
+    -d 'xdebug.discover_client_host=1' \
+    -d 'xdebug.remote_handler=dbgp' \
+    -d 'xdebug.start_with_request=yes' \
+   ./vendor/bin/phpunit "$@"

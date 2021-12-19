@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -f ./.env ]; then
+    source ./.env
+fi
+
+COMPOSER_VERSION=${COMPOSER_VERSION:-"2.0"}
+
+docker run --rm -ti \
+    -v $(pwd):/app \
+    -v ~/.composer:/tmp/.composer \
+	-e "COMPOSER_HOME=/tmp" \
+	-u 1000 \
+    -w /app \
+    "markkimsal/phusion-php:8.0-builder" composer "$@"
